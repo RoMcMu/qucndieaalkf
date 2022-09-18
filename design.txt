@@ -1,0 +1,49 @@
+GET			localhost:5000/queries					Get a list of queries.
+GET			localhost:5000/queries/<query_id>		Get a single query.
+POST		localhost:5000/queries					Create a new query.
+PUT			localhost:5000/queries/<query_id>		Update a query.
+PATCH		localhost:5000/queries/<query_id>		Partially update a query.
+DELETE		localhost:5000/queries/<query_id>		Delete a query.
+
+I can develop different endpoints and have get requests on each of them to serve each of the queries.
+
+localhost:5000/queries/<sensor_id>/<metric>
+
+# Queries can be made once a day and up to one month's worth of them at a time, (1-30).
+
+# In the case of multiple day queries calculate the first date and last date of the request and return the required
+value of each day in a list. (how can this be done via api? Repeated calls it would seem.)
+
+# These can be manipulated via python - max, min, avg - and returned.
+
+
+Queries are made up of the following components:
+	- Sensor ID
+	- Metric
+	- Statistic
+	- Date Range
+
+
+??? Query Option 1 or 2 ???
+------------------------------
+(1) Sensor ID will determine which sensor will be pinged. The sensor will return a full weather readout which can be parsed as required based on the other input.
+
+(2) Sensor ID and a Metric List will determine which sensor to be pinged and which metrics to query. In this case the sensor will return just the required metrics.
+
+A query can be entered by the user via command line parsing. The commands will come in in a parsable fashion:
+
+-sensor sensor1 -metric rainfall -statistic average -date 15/04/2022 30/05/2022
+
+@validation
+- sensor name must be present, if the supplied sensor is not there then return an appropriate response.
+- metric must be one of the set ones (rain, wind, temp...), if not then return an appropriate response.
+- stat must be one of the set ones (avg, max, min...), if not then return an appropriate respones.
+- dates must be in a pair and in the following format dd/mm/yyyy dd/mm/yyyy, if not appropriate response.
+- dates must not be more than 30 days apart.
+- if no date is supplied then the current day will be used.
+
+
+# Include the dates in the query!!
+
+Question: When making a multi day query how should that be stored? Potentially in a dict that contains the query of each day? 
+or in individual days?? QueryID will be different for each request.

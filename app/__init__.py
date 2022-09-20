@@ -114,7 +114,7 @@ def create_app(testing=False, db_name = "my_db.db"):
                 args = parser.parse_args()
         
                 #make unique(ish) query_id
-                query_id = 'query_' + sensor_id + datetime.now().strftime("%m%d%Y%H%M%S")  
+                query_id = 'query_' + sensor_id + '_' + datetime.now().strftime("%m%d%Y%H%M%S")  
                 metric = args['Metric']
                 stat = args['Statistic']
                 start = args['Start Date']

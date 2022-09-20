@@ -69,9 +69,11 @@ def create_app(testing=False, db_name = "my_db.db"):
             if (query_id not in db.keys()):
                 return {'message': 'Query not found', 'data': {}}, 404
 
+            query = db[query_id]
+
             db.close()
 
-            return {'message': 'Success', 'data': db[query_id]}, 200        
+            return {'message': 'Success', 'data': query}, 200        
 
     #########################################################################################
 

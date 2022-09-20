@@ -47,3 +47,16 @@ A query can be entered by the user via command line parsing. The commands will c
 
 Question: When making a multi day query how should that be stored? Potentially in a dict that contains the query of each day? 
 or in individual days?? QueryID will be different for each request.
+
+
+### add documentation!! ###
+
+-------------------------------
+might be good to make query objects do that the app will easier be able to handle changes to the query form.
+
+would make it easier to test
+
+
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+I didnt implement an app factory as this app is lightweight and a sketch.
+Would be good to have an app factory for testing as it would allow the creation of a fresh app for each test scenario

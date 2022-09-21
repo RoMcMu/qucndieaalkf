@@ -14,6 +14,8 @@ Response from:
 ```
 <br>
 <br>
+<br>
+
 ### Display list of sensors
 
 **Definition**
@@ -42,6 +44,8 @@ Response from:
 ```
 <br>
 <br>
+<br>
+
 ### Display Individual Sensor
 
 **Definition**
@@ -66,6 +70,8 @@ Response from:
 
 <br>
 <br>
+<br>
+
 ### Register a new sensor
 
 **Definition**
@@ -93,6 +99,8 @@ Response from:
 ```
 <br>
 <br>
+<br>
+
 ### Deregister a sensor.
 
 **Definition**
@@ -104,8 +112,11 @@ Response from:
 - `404 Not Found` if the device does not exist
 - `204 No Content` on success
 
+
 <br>
 <br>
+<br>
+
 ### Post a Query to a Single Sensor
 
 `POST /queries/<sensor_id>`
@@ -125,6 +136,8 @@ Response from:
 ```
 <br>
 <br>
+<br>
+
 ### Display all Queries
 
 **Definition**
@@ -161,8 +174,7 @@ Response from:
 <br>
 <br>
 <br>
-<br>
-<br>
+
 ### Display Individual Query
 
 **Definition**

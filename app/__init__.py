@@ -121,14 +121,14 @@ def create_app(testing=False, db_name = "my_db.db"):
                 end = args['End Date'] 
                 response = make_response(args)
 
-                query = {'QueryID':query_id, 'SensorID':sensor_id, 'Metric':metric, 'Statistic':stat, 'Start Date':start, 'End Date':end, 'Response':response, 'Type':'Query'}
+                query = {'QueryID':query_id, 'SensorID':sensor_id, 'Metric':metric, 'Statistic':stat, 'Start Date':start, 'End Date':end, 'Response':response}
 
                 # store query in query db on QueryID
                 db[query_id] = query
 
                 db.close()
 
-                message = f'Query successful on {sensor_id}', 
+                message = query_id 
                 data = query
                 code = 201
 
@@ -170,7 +170,7 @@ def create_app(testing=False, db_name = "my_db.db"):
             sensor_id = 'sensor_' + args['SensorID']
             gateway = args['Gateway']
 
-            sensor = {'SensorID':sensor_id, 'Gateway': gateway, 'Type':'Sensor'}
+            sensor = {'SensorID':sensor_id, 'Gateway': gateway}
             
             db = get_db(db_name)
 

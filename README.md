@@ -160,6 +160,9 @@ Response from:
 ```
 <br>
 <br>
+<br>
+<br>
+<br>
 ### Display Individual Query
 
 **Definition**

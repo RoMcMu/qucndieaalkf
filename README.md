@@ -8,11 +8,10 @@ Response from:
 
 ```json
 {
-    "body": "Body of the response",
-    "status": "Status information"
+    "status": "Request Status",
+    "data": "Body of the Response"
 }
 ```
-<br>
 <br>
 
 ### Display list of sensors
@@ -43,7 +42,6 @@ Response from:
 ```
 <br>
 <br>
-<br>
 
 ### Display Individual Sensor
 
@@ -67,7 +65,6 @@ Response from:
 ]
 ```
 
-<br>
 <br>
 <br>
 
@@ -98,7 +95,6 @@ Response from:
 ```
 <br>
 <br>
-<br>
 
 ### Deregister a sensor.
 
@@ -112,7 +108,6 @@ Response from:
 - `204 No Content` on success
 
 
-<br>
 <br>
 <br>
 
@@ -133,7 +128,6 @@ Response from:
     "End Date": ""
 }
 ```
-<br>
 <br>
 <br>
 
@@ -170,7 +164,6 @@ Response from:
     }
 ]
 ```
-<br>
 <br>
 <br>
 

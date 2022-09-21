@@ -14,7 +14,6 @@ Response from:
 ```
 <br>
 <br>
-<br>
 
 ### Display list of sensors
 

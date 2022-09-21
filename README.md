@@ -12,8 +12,8 @@ Response from:
     "status": "Status information"
 }
 ```
-
-
+<br/>
+<br/>
 ### Display list of sensors
 
 **Definition**
@@ -40,7 +40,8 @@ Response from:
     }
 ]
 ```
-
+<br/>
+<br/>
 ### Display Individual Sensor
 
 **Definition**
@@ -63,7 +64,8 @@ Response from:
 ]
 ```
 
-
+<br/>
+<br/>
 ### Register a new sensor
 
 **Definition**
@@ -74,7 +76,7 @@ Response from:
 
 - `"SensorID"`  A unique identifier for the sensor.
 - `"Latitude"`  The latitude GPS value of the sensor.
-- `""Longitude` The longitude GPS value of the sensor.
+- `"Longitude"` The longitude GPS value of the sensor.
 - `"Gateway"`   The IP address of the sensor.
 
 **Response**
@@ -89,7 +91,8 @@ Response from:
     "Gateway": ""
 }
 ```
-
+<br/>
+<br/>
 ### Deregister a sensor.
 
 **Definition**
@@ -101,7 +104,8 @@ Response from:
 - `404 Not Found` if the device does not exist
 - `204 No Content` on success
 
-
+<br/>
+<br/>
 ### Post a Query to a Single Sensor
 
 `POST /queries/<sensor_id>`
@@ -119,7 +123,8 @@ Response from:
     "End Date": ""
 }
 ```
-
+<br/>
+<br/>
 ### Display all Queries
 
 **Definition**
@@ -153,7 +158,8 @@ Response from:
     }
 ]
 ```
-
+<br/>
+<br/>
 ### Display Individual Query
 
 **Definition**

@@ -1,4 +1,7 @@
-
+test_lat = '37.701475274672525'
+test_long = '-122.46976818886122'
+test_gateway = '0.0.0.0'
+test_query_body = {'Metric':'test_metric', 'Statistic':'test_stat', 'Start Date':'11/11/2022', 'End Date':'12/11/2022'}
 
 def test_home_page_get(client):
 
@@ -11,9 +14,8 @@ def test_home_page_get(client):
     response = client.get('/')
 
     print(response)
-#####Finish this test!!!
-
-    assert response != 404
+    
+    assert response.status_code == 200
 
 
 
@@ -25,8 +27,9 @@ def test_register_sensor(client):
     THEN confirm response is 201
     """
     
-    body = {'SensorID':'test_id', 'Gateway':'123.123.123'}
+    body = {'SensorID':'test_id', 'Gateway':test_gateway, 'Latitude': test_lat, 'Longitude': test_long}
     endpoint = '/sensors'
+
     response = client.post(endpoint, data = body)
     
     assert response.status_code == 201
@@ -41,8 +44,8 @@ def test_sensor_get_all(client):
     THEN confirm response is 200
     """
 
-    body_1 = {'SensorID':'test_id_get_all_sensors_1', 'Gateway':'123.123.123'}
-    body_2= {'SensorID':'test_id_get_all_sensors_2', 'Gateway':'123.123.123'}
+    body_1 = {'SensorID':'test_id_get_all_sensors_1', 'Gateway':test_gateway, 'Latitude': test_lat, 'Longitude': test_long}
+    body_2= {'SensorID':'test_id_get_all_sensors_2', 'Gateway':test_gateway, 'Latitude': test_lat, 'Longitude': test_long}
     endpoint = '/sensors'
     client.post(endpoint, data = body_1)
     client.post(endpoint, data = body_2)
@@ -60,7 +63,7 @@ def test_sensor_get_individual_success(client):
     THEN confirm response is 200
     """
 
-    body_1 = {'SensorID':'test_id_get_individual_sensor', 'Gateway':'123.123.123'}
+    body_1 = {'SensorID':'test_id_get_individual_sensor', 'Gateway':test_gateway, 'Latitude': test_lat, 'Longitude': test_long}
     endpoint = '/sensors'
     client.post(endpoint, data = body_1)
     endpoint = '/sensor/sensor_test_id_get_individual_sensor'
@@ -92,7 +95,7 @@ def test_query_post(client):
     THEN confirm response is 201
     """
 
-    body = {'Metric':'test_metric', 'Statistic':'test_stat', 'Start Date':'11/11/2022', 'End Date':'12/11/2022'}
+    body = test_query_body
     endpoint = '/queries/sensor_test_id'
     response = client.post(endpoint, data = body)
     
@@ -108,7 +111,7 @@ def test_query_post_non_existing_sensor(client):
     THEN confirm response is 403
     """
 
-    body = {'Metric':'test_metric', 'Statistic':'test_stat', 'Start Date':'11/11/2022', 'End Date':'12/11/2022'}
+    body = test_query_body
     endpoint = '/queries/sensor_missing_sensor'
     response = client.post(endpoint, data = body)
     
@@ -124,8 +127,8 @@ def test_query_get_all(client):
     THEN confirm response is 200
     """
 
-    body_1 = {'Metric':'test_metric_1', 'Statistic':'test_stat_1', 'Start Date':'11/11/2022', 'End Date':'12/11/2022'}
-    body_2 = {'Metric':'test_metric_2', 'Statistic':'test_stat_2', 'Start Date':'11/11/2022', 'End Date':'12/11/2022'}
+    body_1 = test_query_body
+    body_2 = test_query_body
     
     endpoint = '/queries'
     
@@ -146,13 +149,28 @@ def test_query_get_individual(client):
     THEN confirm response is 200
     """   
 
-    body = {'Metric':'test_metric', 'Statistic':'test_stat', 'Start Date':'11/11/2022', 'End Date':'12/11/2022'}
+    body = test_query_body
     endpoint = '/queries/sensor_test_id'
     response = client.post(endpoint, data = body)
     endpoint = '/query/' + response.json['message']
     response = client.get(endpoint)
 
     assert response.status_code == 200
+
+
+
+def test_query_get_individual_invalid_query_id(client):
+
+    """
+    GIVEN a Flask API
+    WHEN at least one query exists and a GET request is sent to /query/<query_id> with a non-existing value for <query_id>
+    THEN confirm response is 200
+    """   
+    bad_query_id = 'bad_query_id_value'
+    endpoint = '/query/' + bad_query_id
+    response = client.get(endpoint)
+
+    assert response.status_code == 404
 
 
 
@@ -166,14 +184,30 @@ def test_sensor_delete(client):
 
     sensor_id = 'test_id_to_delete'
 
-    body = {'SensorID':sensor_id, 'Gateway':'123.123.123'}
+    body = {'SensorID':sensor_id, 'Gateway':test_gateway, 'Latitude': test_lat, 'Longitude': test_long}
     endpoint = '/sensors'
     client.post(endpoint, data = body)
 
     endpoint = '/sensor/sensor_' + sensor_id
 
-    print(endpoint)
-
     response = client.delete(endpoint)
 
     assert response.status_code == 204
+
+
+
+def test_sensor_delete_bad_sensor_id(client):
+
+    """
+    GIVEN a Flask API
+    WHEN a sensor is registered and a DELETE request is sent to /sensor/<sensor_id> with a valid, registered value for <sensor_id>
+    THEN confirm response is 204
+    """
+
+    sensor_id = 'bad_sensor_id'
+
+    endpoint = '/sensor/sensor_' + sensor_id
+
+    response = client.delete(endpoint)
+
+    assert response.status_code == 404

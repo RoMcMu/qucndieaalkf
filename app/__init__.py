@@ -35,6 +35,7 @@ def create_app(testing=False, db_name = "my_db.db"):
             db = g._database = shelve.open(f"./data/{db_name}", writeback=True)
         return db
 
+
     @app.teardown_appcontext
     def teardown_db(exception):
 
@@ -43,22 +44,24 @@ def create_app(testing=False, db_name = "my_db.db"):
         if db is not None:
             db.close()
 
+
     @app.route("/")
     def readme():
-        
         with open(os.path.dirname(app.root_path) + '/README.md', 'r') as markdown_file:
 
             content = markdown_file.read()
 
             return markdown.markdown(content)
 
+
     def make_response(query):
         metric, stat, start, end = query['Metric'],query['Statistic'],query['Start Date'],query['End Date']
         #TODO Implement this!
         return str(randint(1,100))
 
-    #########################################################################################
 
+    #########################################################################################
+    
     class Query(Resource):
 
         def get(self, query_id):
@@ -77,8 +80,9 @@ def create_app(testing=False, db_name = "my_db.db"):
 
     #########################################################################################
 
-    class QueryList(Resource):
 
+    class QueryList(Resource):
+     
         def get(self):
             db = get_db(db_name)
             keys = list(db.keys())
@@ -94,6 +98,7 @@ def create_app(testing=False, db_name = "my_db.db"):
             return {'message': 'Success', 'data': query_list}, 200
 
     #########################################################################################
+    
 
     class SensorQuery(Resource):
 
@@ -130,7 +135,7 @@ def create_app(testing=False, db_name = "my_db.db"):
 
                 message = query_id 
                 data = query
-                code = 201
+                code = 200
 
             else:
                 message =  f'Sensor: {sensor_id} not found'
@@ -140,6 +145,7 @@ def create_app(testing=False, db_name = "my_db.db"):
             return {'message': message, 'data': data}, code
 
     #########################################################################################
+
 
     class SensorList(Resource):
 
@@ -158,19 +164,20 @@ def create_app(testing=False, db_name = "my_db.db"):
 
             return {'message': 'Success', 'data': sensor_list}, 200
 
+
         def post(self):
             parser = reqparse.RequestParser()
 
             parser.add_argument('SensorID', required=True)
+            parser.add_argument('Latitude', required=True)
+            parser.add_argument('Longitude', required=True)
             parser.add_argument('Gateway', required=True)
 
             args = parser.parse_args()
 
             # Parse the arguments into an object
             sensor_id = 'sensor_' + args['SensorID']
-            gateway = args['Gateway']
-
-            sensor = {'SensorID':sensor_id, 'Gateway': gateway}
+            sensor = {'SensorID':sensor_id, 'Gateway':args['Gateway'], 'Latitude':args['Latitude'], 'Longitude':args['Longitude'] }
             
             db = get_db(db_name)
 
@@ -181,8 +188,10 @@ def create_app(testing=False, db_name = "my_db.db"):
             return {'message': 'Sensor registered', 'data': sensor['SensorID']}, 201
 
     #########################################################################################
+    
 
     class Sensor(Resource):
+
         def get(self, sensor_id):
             db = get_db(db_name)
 
@@ -193,6 +202,7 @@ def create_app(testing=False, db_name = "my_db.db"):
             db.close()
             
             return {'message': 'Sensor found', 'data': sensor_id}, 200
+
 
         def delete(self, sensor_id):
             db = get_db(db_name)
@@ -205,7 +215,7 @@ def create_app(testing=False, db_name = "my_db.db"):
 
             db.close()
 
-            return f'Sensor {sensor_id} deregistered', 204
+            return {'message': 'Sensor not found', 'data': {}}, 204
     
     #########################################################################################
 

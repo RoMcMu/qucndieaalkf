@@ -47,7 +47,7 @@ Response from:
 
 **Definition**
 
-`GET /sensor/<sensor_id`
+`GET /sensor/<sensor_id>`
 
 **Response**
 
@@ -55,14 +55,12 @@ Response from:
 - `404 Not Found` if the device does not exist
 
 ```json
-[
-    {
-        "SensorID": "",
-        "Lontitude": "",
-        "Latitude": "",
-        "Gateway": ""
-    }
-]
+{
+    "SensorID": "",
+    "Lontitude": "",
+    "Latitude": "",
+    "Gateway": ""
+}
 ```
 
 <br>
@@ -171,7 +169,7 @@ Response from:
 
 **Definition**
 
-`GET /query/<query_id`
+`GET /query/<query_id>`
 
 **Response**
 
@@ -179,15 +177,13 @@ Response from:
 - `404 Not Found` if the device does not exist
 
 ```json
-[
-    {
-        "QueryID": "",
-        "SensorID": "",
-        "Metric": "",
-        "Statistic": "",
-        "Start Date": "",
-        "End Date": "",
-        "Response": ""
-    }
-]
+{
+    "QueryID": "",
+    "SensorID": "",
+    "Metric": "",
+    "Statistic": "",
+    "Start Date": "",
+    "End Date": "",
+    "Response": ""
+}
 ```

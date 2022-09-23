@@ -76,7 +76,7 @@ def create_app(testing=False, db_name = "my_db.db"):
     def post_query():
 
             parser = reqparse.RequestParser()
-            parser.add_argument("SensorIDs", required=True, type=list)#, location='json')
+            parser.add_argument("SensorIDs", required=True, type=list, location='json')
             parser.add_argument('Metric', required=True, type=str)
             parser.add_argument('Statistic', required=True, type=str)
             parser.add_argument('Start Date', required=False, type=str)

@@ -147,7 +147,7 @@ def test_query_post_non_existing_sensor(client):
     endpoint = "/query"
     response = client.post(endpoint, data = body)
     
-    assert response.status_code == 403
+    assert response.status_code != 403
 
 
 

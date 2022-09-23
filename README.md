@@ -131,7 +131,11 @@ Response from:
 
 ```json
 {
-    "SensorID": "",
+    "SensorIDs": [
+        "",
+        "",
+        "",
+    ],
     "Metric": "",
     "Statistic": "",
     "Start Date": "",

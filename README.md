@@ -2,6 +2,17 @@
 
 # Weather Sensor API
 
+## To Run Application:
+
+1 - docker compose build
+2 - docker compose up
+
+## To Run pytest
+
+1 - coverage run -m pytest
+2 - coverage report -m
+
+
 ## Usage
 
 Response from:
@@ -120,11 +131,7 @@ Response from:
 
 ```json
 {
-    "SensorIDs": [
-        "",
-        "",
-        ""
-    ],
+    "SensorID": "",
     "Metric": "",
     "Statistic": "",
     "Start Date": "",

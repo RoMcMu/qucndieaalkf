@@ -72,11 +72,12 @@ def create_app(testing=False, db_name = "my_db.db"):
         return {'message': 'Success', 'data': query}, 200  
 
 
+
     @app.route('/query', methods=['POST'])
     def post_query():
 
             parser = reqparse.RequestParser()
-            parser.add_argument("SensorIDs", required=True, type=list, location='json')
+            parser.add_argument("SensorID", required=True, type=str)
             parser.add_argument('Metric', required=True, type=str)
             parser.add_argument('Statistic', required=True, type=str)
             parser.add_argument('Start Date', required=False, type=str)
@@ -86,22 +87,21 @@ def create_app(testing=False, db_name = "my_db.db"):
 
             args = parser.parse_args()
 
-            sensor_ids = args['SensorIDs']
+            sensor_id = args['SensorID']
 
             response = {}
 
             success = False
 
-            if sensor_ids[0] == 'all':
-                #return the query from all sensors
-                pass
+            if sensor_id == 'all':
+                keys = db.keys()
+                sensor_ids = []
 
-            elif sensor_ids: # if sensor_ids is not empty (True)
-                
-                for sensor_id in sensor_ids:
+                for k in keys:
+                    if k.startswith('sensor_'):
+                        sensor_ids.append(k)
 
-                    if sensor_id in db.keys():
-                        
+                    for sensor_id in sensor_ids:
                         # create query from arg parser
                         args = parser.parse_args()
                 
@@ -128,11 +128,43 @@ def create_app(testing=False, db_name = "my_db.db"):
                         response[query_id] = query
                         message = query_id
                         success = True
+                    
 
-                    else:
-                        message = ''
-                        response['ERROR'] = f'Sensor: {sensor_id} not found'
-                        code = 403
+            elif sensor_id is not None: # if sensor_ids is not empty (True)
+                
+                if sensor_id in db.keys():
+                    
+                    # create query from arg parser
+                    args = parser.parse_args()
+            
+                    #make unique(ish) query_id
+                    query_id = 'query_' + sensor_id + '_' + datetime.now().strftime("%m%d%Y%H%M%S")  
+
+                    metric = args['Metric']
+                    stat = args['Statistic']
+                    start = args['Start Date']
+                    end = args['End Date'] 
+                    queried_value = make_response(args)
+
+                    query = {'QueryID':query_id, 
+                            'SensorID':sensor_id, 
+                            'Metric':metric, 
+                            'Statistic':stat, 
+                            'Start Date':start, 
+                            'End Date':end, 
+                            'Queried Value': queried_value}
+
+                    # store query in query db on QueryID
+                    db[query_id] = query
+
+                    response[query_id] = query
+                    message = query_id
+                    success = True
+
+                else:
+                    message = ''
+                    response['ERROR'] = f'Sensor: {sensor_id} not found'
+                    code = 403
 
             if success == True:
                 code = 200

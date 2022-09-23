@@ -1,2 +1,0 @@
-# qucndieaalkf
-Weather Sensor API

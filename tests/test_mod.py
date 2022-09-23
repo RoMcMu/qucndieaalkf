@@ -101,7 +101,39 @@ def test_query_post_single_sensor(client):
     client.post(endpoint, data = body)
 
     # POST query to test sensor
-    body = {"SensorID" : "sensor_test_id_individual", "Metric":"test_metric", "Statistic":"test_stat", "Start Date":"11/11/2022", "End Date":"12/11/2022"}
+    body = {"SensorIDs" : ["sensor_test_id_individual"], "Metric":"test_metric", "Statistic":"test_stat", "Start Date":"11/11/2022", "End Date":"12/11/2022"}
+    endpoint = "/query"
+    response = client.post(endpoint, data = body)
+
+    assert response.status_code == 200
+
+
+
+def test_query_post_multi_sensor(client):
+
+    """
+    GIVEN a Flask API
+    WHEN a correct query is made via a POST request to "/query"
+    THEN confirm response is 201
+    """
+
+    # register test sensor 1
+    body = {"SensorID":"test_id_multi_1", "Gateway":test_gateway, "Latitude": test_lat, "Longitude": test_long}
+    endpoint = "/sensors"
+    client.post(endpoint, data = body)
+
+    # register test sensor 2
+    body = {"SensorID":"test_id_multi_2", "Gateway":test_gateway, "Latitude": test_lat, "Longitude": test_long}
+    endpoint = "/sensors"
+    client.post(endpoint, data = body)
+
+    # register test sensor 3
+    body = {"SensorID":"test_id_multi_3", "Gateway":test_gateway, "Latitude": test_lat, "Longitude": test_long}
+    endpoint = "/sensors"
+    client.post(endpoint, data = body)
+
+    # POST query to test sensor
+    body = {"SensorIDs" : ["sensor_test_id_multi_1", "sensor_test_id_multi_2", "sensor_test_id_multi_3"], "Metric":"test_metric", "Statistic":"test_stat", "Start Date":"11/11/2022", "End Date":"12/11/2022"}
     endpoint = "/query"
     response = client.post(endpoint, data = body)
 
@@ -116,7 +148,7 @@ def test_query_post_all_sensors(client):
     """
 
     # POST query to test sensor
-    body = {"SensorID" : "all", "Metric":"test_metric", "Statistic":"test_stat", "Start Date":"11/11/2022", "End Date":"12/11/2022"}
+    body = {"SensorID" : ["all"], "Metric":"test_metric", "Statistic":"test_stat", "Start Date":"11/11/2022", "End Date":"12/11/2022"}
     endpoint = "/query"
     response = client.post(endpoint, data = body)
 

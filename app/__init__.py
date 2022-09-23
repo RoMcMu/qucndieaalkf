@@ -77,7 +77,7 @@ def create_app(testing=False, db_name = "my_db.db"):
     def post_query():
 
             parser = reqparse.RequestParser()
-            parser.add_argument("SensorID", required=True, type=str)
+            parser.add_argument("SensorIDs", required=True, type=list, location='json')
             parser.add_argument('Metric', required=True, type=str)
             parser.add_argument('Statistic', required=True, type=str)
             parser.add_argument('Start Date', required=False, type=str)
@@ -87,13 +87,13 @@ def create_app(testing=False, db_name = "my_db.db"):
 
             args = parser.parse_args()
 
-            sensor_id = args['SensorID']
+            sensor_ids = args['SensorIDs']
 
             response = {}
 
             success = False
 
-            if sensor_id == 'all':
+            if sensor_ids[0] == 'all':
                 keys = db.keys()
                 sensor_ids = []
 
@@ -130,41 +130,43 @@ def create_app(testing=False, db_name = "my_db.db"):
                         success = True
                     
 
-            elif sensor_id is not None: # if sensor_ids is not empty (True)
+            elif sensor_ids: # if sensor_ids is not empty (True)
+
+                for sensor_id in sensor_ids:
+
+                    if sensor_id in db.keys():
+                        
+                        # create query from arg parser
+                        args = parser.parse_args()
                 
-                if sensor_id in db.keys():
-                    
-                    # create query from arg parser
-                    args = parser.parse_args()
-            
-                    #make unique(ish) query_id
-                    query_id = 'query_' + sensor_id + '_' + datetime.now().strftime("%m%d%Y%H%M%S")  
+                        #make unique(ish) query_id
+                        query_id = 'query_' + sensor_id + '_' + datetime.now().strftime("%m%d%Y%H%M%S")  
 
-                    metric = args['Metric']
-                    stat = args['Statistic']
-                    start = args['Start Date']
-                    end = args['End Date'] 
-                    queried_value = make_response(args)
+                        metric = args['Metric']
+                        stat = args['Statistic']
+                        start = args['Start Date']
+                        end = args['End Date'] 
+                        queried_value = make_response(args)
 
-                    query = {'QueryID':query_id, 
-                            'SensorID':sensor_id, 
-                            'Metric':metric, 
-                            'Statistic':stat, 
-                            'Start Date':start, 
-                            'End Date':end, 
-                            'Queried Value': queried_value}
+                        query = {'QueryID':query_id, 
+                                'SensorID':sensor_id, 
+                                'Metric':metric, 
+                                'Statistic':stat, 
+                                'Start Date':start, 
+                                'End Date':end, 
+                                'Queried Value': queried_value}
 
-                    # store query in query db on QueryID
-                    db[query_id] = query
+                        # store query in query db on QueryID
+                        db[query_id] = query
 
-                    response[query_id] = query
-                    message = query_id
-                    success = True
+                        response[query_id] = query
+                        message = query_id
+                        success = True
 
-                else:
-                    message = ''
-                    response['ERROR'] = f'Sensor: {sensor_id} not found'
-                    code = 403
+                    else:
+                        message = ''
+                        response['ERROR'] = f'Sensor: {sensor_id} not found'
+                        code = 403
 
             if success == True:
                 code = 200

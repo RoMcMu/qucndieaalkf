@@ -32,3 +32,6 @@
 'query_sensor_test_id_09232022024545', (16896, 258)
 'query_sensor_test_id_get_all_sensors_1_09232022024545', (17408, 293)
 'query_sensor_test_id_individual_09232022024546', (17920, 280)
+'sensor_test_id_multi_1', (19968, 162)
+'sensor_test_id_multi_2', (20480, 162)
+'sensor_test_id_multi_3', (20992, 162)

@@ -111,7 +111,7 @@ Response from:
 
 ### Post a Query to a Single Sensor
 
-`POST /queries/<sensor_id>`
+`POST /query
 
 **Response**
 
@@ -120,6 +120,11 @@ Response from:
 
 ```json
 {
+    "SensorIDs": [
+        "",
+        "",
+        ""
+    ],
     "Metric": "",
     "Statistic": "",
     "Start Date": "",

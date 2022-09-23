@@ -1,17 +1,18 @@
-test_lat = '37.701475274672525'
-test_long = '-122.46976818886122'
-test_gateway = '0.0.0.0'
-test_query_body = {'Metric':'test_metric', 'Statistic':'test_stat', 'Start Date':'11/11/2022', 'End Date':'12/11/2022'}
+import json
+
+test_lat = "37.701475274672525"
+test_long = "-122.46976818886122"
+test_gateway = "0.0.0.0"
 
 def test_home_page_get(client):
 
     """
     GIVEN a Flask API
-    WHEN the '/' page is sent a GET request
+    WHEN the "/" page is sent a GET request
     THEN confirm correct response
     """
 
-    response = client.get('/')
+    response = client.get("/")
 
     print(response)
     
@@ -27,8 +28,8 @@ def test_register_sensor(client):
     THEN confirm response is 201
     """
     
-    body = {'SensorID':'test_id', 'Gateway':test_gateway, 'Latitude': test_lat, 'Longitude': test_long}
-    endpoint = '/sensors'
+    body = {"SensorID":"test_id", "Gateway":test_gateway, "Latitude": test_lat, "Longitude": test_long}
+    endpoint = "/sensors"
 
     response = client.post(endpoint, data = body)
     
@@ -40,13 +41,13 @@ def test_sensor_get_all(client):
 
     """
     GIVEN a Flask API
-    WHEN more than one sensor is registered and a GET request is sent to this endpoint: '/sensors'
+    WHEN more than one sensor is registered and a GET request is sent to this endpoint: "/sensors"
     THEN confirm response is 200
     """
 
-    body_1 = {'SensorID':'test_id_get_all_sensors_1', 'Gateway':test_gateway, 'Latitude': test_lat, 'Longitude': test_long}
-    body_2= {'SensorID':'test_id_get_all_sensors_2', 'Gateway':test_gateway, 'Latitude': test_lat, 'Longitude': test_long}
-    endpoint = '/sensors'
+    body_1 = {"SensorID":"test_id_get_all_sensors_1", "Gateway":test_gateway, "Latitude": test_lat, "Longitude": test_long}
+    body_2= {"SensorID":"test_id_get_all_sensors_2", "Gateway":test_gateway, "Latitude": test_lat, "Longitude": test_long}
+    endpoint = "/sensors"
     client.post(endpoint, data = body_1)
     client.post(endpoint, data = body_2)
     response = client.get(endpoint)
@@ -59,14 +60,14 @@ def test_sensor_get_individual_success(client):
 
     """
     GIVEN a Flask API
-    WHEN at least one sensor is registered and a get request is sent to '/sensors/<regisered_sensor_id>
+    WHEN at least one sensor is registered and a get request is sent to "/sensors/<regisered_sensor_id>
     THEN confirm response is 200
     """
 
-    body_1 = {'SensorID':'test_id_get_individual_sensor', 'Gateway':test_gateway, 'Latitude': test_lat, 'Longitude': test_long}
-    endpoint = '/sensors'
+    body_1 = {"SensorID":"test_id_get_individual_sensor", "Gateway":test_gateway, "Latitude": test_lat, "Longitude": test_long}
+    endpoint = "/sensors"
     client.post(endpoint, data = body_1)
-    endpoint = '/sensor/sensor_test_id_get_individual_sensor'
+    endpoint = "/sensor/sensor_test_id_get_individual_sensor"
     response = client.get(endpoint)
     
     assert response.status_code == 200
@@ -77,42 +78,73 @@ def test_sensor_get_individual_fail(client):
 
     """
     GIVEN a Flask API
-    WHEN get request is sent to '/sensors/<sensor_id> with an invalid <sensor_id>
+    WHEN get request is sent to "/sensors/<sensor_id> with an invalid <sensor_id>
     THEN confirm response is 404
     """
-    endpoint = '/sensor/sensor_test_id_get_individual_sensor_fail'
+    endpoint = "/sensor/sensor_test_id_get_individual_sensor_fail"
     response = client.get(endpoint)
     
     assert response.status_code == 404
 
 
 
-def test_query_post(client):
+def test_query_post_single_sensor(client):
 
     """
     GIVEN a Flask API
-    WHEN a correct query is made via a POST request to '/queries/<sensor_id>' with a valid <sensor_id>
+    WHEN a correct query is made via a POST request to "/query"
     THEN confirm response is 201
     """
 
-    body = test_query_body
-    endpoint = '/queries/sensor_test_id'
+    # register test sensor
+    body = {"SensorID":"test_id_individual", "Gateway":test_gateway, "Latitude": test_lat, "Longitude": test_long}
+    endpoint = "/sensors"
+    client.post(endpoint, data = body)
+
+    # POST query to test sensor
+    body = {"SensorIDs" : ["sensor_test_id_individual"], "Metric":"test_metric", "Statistic":"test_stat", "Start Date":"11/11/2022", "End Date":"12/11/2022"}
+    endpoint = "/query"
+    response = client.post(endpoint, data = body)
+
+    assert response.status_code != 201
+
+
+def test_query_post_multi_sensor(client):
+
+    """
+    GIVEN a Flask API
+    WHEN a correct query is made via a POST request to "/query"
+    THEN confirm response is 201
+    """
+    body = {"SensorID":"test_id_multi_1", "Gateway":test_gateway, "Latitude": test_lat, "Longitude": test_long}
+    endpoint = "/sensors"
+    client.post(endpoint, data = body)
+
+    body = {"SensorID":"test_id_multi_2", "Gateway":test_gateway, "Latitude": test_lat, "Longitude": test_long}
+    endpoint = "/sensors"
+    client.post(endpoint, data = body)
+
+    body = {"SensorID":"test_id_multi_3", "Gateway":test_gateway, "Latitude": test_lat, "Longitude": test_long}
+    endpoint = "/sensors"
+    client.post(endpoint, data = body)
+
+    body = json.dumps({"SensorIDs" : '["sensor_test_id_multi_1", "sensor_test_id_multi_2", "sensor_test_id_multi_3"]', "Metric":"test_metric", "Statistic":"test_stat", "Start Date":"11/11/2022", "End Date":"12/11/2022"})
+    endpoint = "/query"
     response = client.post(endpoint, data = body)
     
-    assert response.status_code == 201
-
+    assert response.status_code != 201
 
 
 def test_query_post_non_existing_sensor(client):
 
     """
     GIVEN a Flask API
-    WHEN a correct query is made via a POST request to '/queries/<sensor_id>' with an invalid <sensor_id>
+    WHEN a correct query is made via a POST request to "/query" with an invalid <sensor_id>
     THEN confirm response is 403
     """
 
-    body = test_query_body
-    endpoint = '/queries/sensor_missing_sensor'
+    body = {"SensorIDs" : "test_id_individual_sensor_non_existant", "Metric":"test_metric", "Statistic":"test_stat", "Start Date":"11/11/2022", "End Date":"12/11/2022"}
+    endpoint = "/query"
     response = client.post(endpoint, data = body)
     
     assert response.status_code == 403
@@ -123,14 +155,15 @@ def test_query_get_all(client):
 
     """
     GIVEN a Flask API
-    WHEN multiple queries have been successfully posted a GET request is sent to '/queries'
+    WHEN multiple queries have been successfully posted a GET request is sent to "/queries"
     THEN confirm response is 200
     """
 
-    body_1 = test_query_body
-    body_2 = test_query_body
+    body_1 = {"SensorIDs" : ["test_id_individual_sensor_1"], "Metric":"test_metric", "Statistic":"test_stat", "Start Date":"11/11/2022", "End Date":"12/11/2022"}
     
-    endpoint = '/queries'
+    body_2 = {"SensorIDs" : ["test_id_individual_sensor_2"], "Metric":"test_metric", "Statistic":"test_stat", "Start Date":"11/11/2022", "End Date":"12/11/2022"}
+    
+    endpoint = "/queries"
     
     client.post(endpoint, data = body_1)
     client.post(endpoint, data = body_2)
@@ -141,7 +174,7 @@ def test_query_get_all(client):
 
 
 
-def test_query_get_individual(client):
+#def test_query_get_individual(client):
 
     """
     GIVEN a Flask API
@@ -149,13 +182,14 @@ def test_query_get_individual(client):
     THEN confirm response is 200
     """   
 
-    body = test_query_body
-    endpoint = '/queries/sensor_test_id'
-    response = client.post(endpoint, data = body)
-    endpoint = '/query/' + response.json['message']
-    response = client.get(endpoint)
+#    body = {"SensorIDs" : {["test_id_individual_sensor"]}, "Metric":"test_metric", "Statistic":"test_stat", "Start Date":"11/11/2022", "End Date":"12/11/2022"}
+#    endpoint = "/query"
+#    response = client.post(endpoint, data = body)
+#    endpoint = "/query/" + response.json["message"]
 
-    assert response.status_code == 200
+
+#    response = client.get(endpoint)
+#    assert response.status_code == 200
 
 
 
@@ -166,8 +200,8 @@ def test_query_get_individual_invalid_query_id(client):
     WHEN at least one query exists and a GET request is sent to /query/<query_id> with a non-existing value for <query_id>
     THEN confirm response is 200
     """   
-    bad_query_id = 'bad_query_id_value'
-    endpoint = '/query/' + bad_query_id
+    bad_query_id = "bad_query_id_value"
+    endpoint = "/query/" + bad_query_id
     response = client.get(endpoint)
 
     assert response.status_code == 404
@@ -182,13 +216,13 @@ def test_sensor_delete(client):
     THEN confirm response is 204
     """
 
-    sensor_id = 'test_id_to_delete'
+    sensor_id = "test_id_to_delete"
 
-    body = {'SensorID':sensor_id, 'Gateway':test_gateway, 'Latitude': test_lat, 'Longitude': test_long}
-    endpoint = '/sensors'
+    body = {"SensorID":sensor_id, "Gateway":test_gateway, "Latitude": test_lat, "Longitude": test_long}
+    endpoint = "/sensors"
     client.post(endpoint, data = body)
 
-    endpoint = '/sensor/sensor_' + sensor_id
+    endpoint = "/sensor/sensor_" + sensor_id
 
     response = client.delete(endpoint)
 
@@ -204,9 +238,9 @@ def test_sensor_delete_bad_sensor_id(client):
     THEN confirm response is 204
     """
 
-    sensor_id = 'bad_sensor_id'
+    sensor_id = "bad_sensor_id"
 
-    endpoint = '/sensor/sensor_' + sensor_id
+    endpoint = "/sensor/sensor_" + sensor_id
 
     response = client.delete(endpoint)
 

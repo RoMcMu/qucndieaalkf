@@ -22,9 +22,6 @@ def create_app(testing=False, db_name = "my_db.db"):
     # Create Flask instance
     app = Flask(__name__)
 
-    # Create API!
-    api = Api(app)
-
 
     def get_db(db_name):
 
@@ -59,9 +56,6 @@ def create_app(testing=False, db_name = "my_db.db"):
         return str(randint(1,100))
 
 
-    #########################################################################################
-    
-
     @app.route('/query/<query_id>', methods=['GET'])
     def get_query(query_id):
 
@@ -77,11 +71,12 @@ def create_app(testing=False, db_name = "my_db.db"):
 
         return {'message': 'Success', 'data': query}, 200  
 
+
     @app.route('/query', methods=['POST'])
     def post_query():
 
             parser = reqparse.RequestParser()
-            parser.add_argument("SensorIDs", required=True, type=list, location='json')
+            parser.add_argument("SensorIDs", required=True, type=list)#, location='json')
             parser.add_argument('Metric', required=True, type=str)
             parser.add_argument('Statistic', required=True, type=str)
             parser.add_argument('Start Date', required=False, type=str)
@@ -131,11 +126,11 @@ def create_app(testing=False, db_name = "my_db.db"):
                         db[query_id] = query
 
                         response[query_id] = query
-
+                        message = query_id
                         success = True
 
                     else:
-
+                        message = ''
                         response['ERROR'] = f'Sensor: {sensor_id} not found'
                         code = 403
 
@@ -144,7 +139,7 @@ def create_app(testing=False, db_name = "my_db.db"):
 
             db.close()
 
-            return {'data': response}, code
+            return {'message': message, 'data': response}, code
 
 
     @app.route('/queries', methods=['GET'])     
@@ -198,9 +193,9 @@ def create_app(testing=False, db_name = "my_db.db"):
         sensor_id = 'sensor_' + args['SensorID']
 
         sensor = {'SensorID':sensor_id, 
-                    'Gateway':args['Gateway'], 
-                    'Latitude':args['Latitude'], 
-                    'Longitude':args['Longitude'] }
+                  'Gateway':args['Gateway'], 
+                  'Latitude':args['Latitude'], 
+                  'Longitude':args['Longitude'] }
         
         db = get_db(db_name)
 
@@ -238,5 +233,5 @@ def create_app(testing=False, db_name = "my_db.db"):
 
         return {'message': f'Sensor {sensor_id} Deregistered'}, 204
     
-    
+
     return app

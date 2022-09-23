@@ -143,6 +143,27 @@ Response from:
 <br>
 <br>
 
+### Post a Query to all Sensors
+
+`POST /query
+
+**Response**
+
+- `403 Not Found` if the sensor being posted to does not exist
+- `200 OK` on success
+
+```json
+{
+    "SensorID": "all",
+    "Metric": "",
+    "Statistic": "",
+    "Start Date": "",
+    "End Date": ""
+}
+```
+<br>
+<br>
+
 ### Display all Queries
 
 **Definition**

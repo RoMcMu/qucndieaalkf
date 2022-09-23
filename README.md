@@ -4,14 +4,16 @@
 
 ## To Run Application:
 
-# 1 - docker compose build
-# 2 - docker compose up
+## 1 - docker compose build
+## 2 - docker compose up
 
 ## To Run pytest
 
-# 1 - coverage run -m pytest
-# 2 - coverage report -m
+## 1 - coverage run -m pytest
+## 2 - coverage report -m
 
+<br>
+<br>
 
 ## Usage
 
@@ -136,6 +138,27 @@ Response from:
         "",
         "",
     ],
+    "Metric": "",
+    "Statistic": "",
+    "Start Date": "",
+    "End Date": ""
+}
+```
+<br>
+<br>
+
+### Post a Query to all Sensors
+
+`POST /query
+
+**Response**
+
+- `403 Not Found` if the sensor being posted to does not exist
+- `200 OK` on success
+
+```json
+{
+    "SensorID": "all",
     "Metric": "",
     "Statistic": "",
     "Start Date": "",

@@ -1,0 +1,184 @@
+{
+	"info": {
+		"_postman_id": "33fdb2d1-73b7-4a06-8011-f5d0ff543684",
+		"name": "WeatherSensor Calls",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23407789"
+	},
+	"item": [
+		{
+			"name": "Get All Sensor Overviews",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:5000/sensors",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"sensors"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET individual sensor",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:5000/sensor/sensor_2",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"sensor",
+						"sensor_2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST Register Sensor",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"SensorID\": \"6\",\r\n    \"Latitude\": \"37.701475274672525\",\r\n    \"Longitude\": \"-122.46976818886122\",\r\n    \"Gateway\": \"11.22.33.44\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:5000/sensors",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"sensors"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE Deregister Sensor",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:5000/sensor/sensor9",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"sensor",
+						"sensor9"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET all queries",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:5000/queries",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"queries"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET single query",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:5000/query/<query_id>",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"query",
+						"<query_id>"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST a query",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"SensorID\": [\"sensor_2\",\"sensor_3\"],\r\n    \"Metric\": \"test_metric\",\r\n    \"Statistic\": \"test_stat\",\r\n    \"Start Date\": \"11/11/2022\",\r\n    \"End Date\": \"12/11/2022\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:5000/query",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"query"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST query all sensors",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"SensorID\": \"all\",\r\n    \"Metric\": \"test_metric\",\r\n    \"Statistic\": \"test_stat\",\r\n    \"Start Date\": \"11/11/2022\",\r\n    \"End Date\": \"12/11/2022\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:5000/query",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"query"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
